@@ -218,6 +218,17 @@ class SerializationTestCase(unittest.TestCase):
         p3 = P2(1, 3)
         self.assertEqual(p1, p3)
 
+    def test_namedtuple_subclass(self):
+        # Classes have to be defined in the global scope
+        sys.path.append(os.path.join(SPARK_HOME, "python/test_support/"))
+
+        from namedtuples import PointSubclass
+        from pickle import dumps, loads
+
+        p1 = PointSubclass(1, 3)
+        p2 = loads(dumps(p1))
+        self.assertEqual(p1.sum(), p2.sum())
+
     def test_itemgetter(self):
         from operator import itemgetter
         ser = CloudPickleSerializer()

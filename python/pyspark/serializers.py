@@ -483,6 +483,9 @@ def _hack_namedtuple(cls):
     fields = cls._fields
 
     def __reduce__(self):
+        # hack only direct subclasses of tuple, do not hack namedtuple subclasses
+        if tuple not in self.__class__.__bases__:
+            return super(cls, self).__reduce__()
         return (_restore, (name, fields, tuple(self)))
     cls.__reduce__ = __reduce__
     cls._is_namedtuple_ = True
